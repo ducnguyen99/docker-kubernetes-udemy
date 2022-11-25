@@ -1,0 +1,22 @@
+language: generic
+sudo: required
+services: 
+  - docker
+
+before_install:
+  - docker build -t ducbin/docker-react -f Dockerfile.dev .
+
+script:
+  - docker run -e CI=true ducbin/docker-react npm run test
+  
+deploy:
+  provider: elasticbeanstalk
+  region: "us-east-2"
+  app: "docker"
+  env: "Docker-env"
+  bucket_name: "elasticbeanstalk-us-east-2-240621839480"
+  bucket_path: "elasticbeanstalk-us-east-2-240621839480"
+  on:
+    branch: master
+  access_key_id: "$AWS_ACCESS_KEY"
+  secret_access_key: "$AWS_SECRET_KEY"
